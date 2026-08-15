@@ -25,3 +25,6 @@ docs/.vitepress/cache
 *.db
 autoresearch/results/
 autoresearch-results.tsv
+
+# Local Gxgen media harvest — do not version. Working tree is the source.
+gxgen-data/
