@@ -14613,6 +14613,132 @@
     "siteSession": "persistent"
   },
   {
+    "site": "flow",
+    "name": "image",
+    "description": "Generate AI images using Google Flow (https://flow.google.com)",
+    "access": "write",
+    "domain": "flow.google.com",
+    "strategy": "ui",
+    "browser": true,
+    "args": [
+      {
+        "name": "prompt",
+        "type": "str",
+        "required": true,
+        "positional": true,
+        "help": "Text prompt describing the image to generate"
+      },
+      {
+        "name": "ratio",
+        "type": "string",
+        "default": "16:9",
+        "required": false,
+        "help": "Image aspect ratio: 16:9, 4:3, 1:1, 3:4, 9:16"
+      },
+      {
+        "name": "count",
+        "type": "int",
+        "default": 1,
+        "required": false,
+        "help": "Number of images to generate (1-4)"
+      },
+      {
+        "name": "output",
+        "type": "string",
+        "required": false,
+        "help": "Local file path to save the generated image (e.g. ./output.png)"
+      },
+      {
+        "name": "project",
+        "type": "string",
+        "required": false,
+        "help": "Optional project ID or URL to run generation inside"
+      },
+      {
+        "name": "timeout",
+        "type": "int",
+        "default": 120,
+        "required": false,
+        "help": "Timeout in seconds for image generation"
+      }
+    ],
+    "columns": [
+      "id",
+      "prompt",
+      "ratio",
+      "url",
+      "output",
+      "status"
+    ],
+    "type": "js",
+    "modulePath": "flow/image.js",
+    "sourceFile": "flow/image.js",
+    "navigateBefore": true
+  },
+  {
+    "site": "flow",
+    "name": "video",
+    "description": "Generate AI videos using Google Flow (https://flow.google.com)",
+    "access": "write",
+    "domain": "flow.google.com",
+    "strategy": "ui",
+    "browser": true,
+    "args": [
+      {
+        "name": "prompt",
+        "type": "str",
+        "required": true,
+        "positional": true,
+        "help": "Text prompt describing the video to generate"
+      },
+      {
+        "name": "ratio",
+        "type": "string",
+        "default": "16:9",
+        "required": false,
+        "help": "Video aspect ratio: 16:9, 9:16"
+      },
+      {
+        "name": "count",
+        "type": "int",
+        "default": 1,
+        "required": false,
+        "help": "Number of videos to generate (1-2)"
+      },
+      {
+        "name": "output",
+        "type": "string",
+        "required": false,
+        "help": "Local file path to save the generated video (e.g. ./output.mp4)"
+      },
+      {
+        "name": "project",
+        "type": "string",
+        "required": false,
+        "help": "Optional project ID or URL to run generation inside"
+      },
+      {
+        "name": "timeout",
+        "type": "int",
+        "default": 300,
+        "required": false,
+        "help": "Timeout in seconds for video generation (default 300s)"
+      }
+    ],
+    "columns": [
+      "id",
+      "prompt",
+      "ratio",
+      "coverUrl",
+      "output",
+      "status"
+    ],
+    "type": "js",
+    "modulePath": "flow/video.js",
+    "sourceFile": "flow/video.js",
+    "navigateBefore": true
+  },
+  {
     "site": "gemini",
     "name": "ask",
     "description": "Send a prompt to Gemini and return only the assistant response",
@@ -25713,6 +25839,131 @@
     "navigateBefore": "https://medium.com"
   },
   {
+    "site": "meigen",
+    "name": "download",
+    "description": "Batch download prompts and images from meigen.ai via Supabase API",
+    "access": "read",
+    "strategy": "public",
+    "browser": false,
+    "args": [
+      {
+        "name": "output",
+        "type": "str",
+        "default": "./meigen-downloads",
+        "required": false,
+        "positional": true,
+        "help": "Output directory path"
+      },
+      {
+        "name": "limit",
+        "type": "int",
+        "default": 500,
+        "required": false,
+        "help": "Max prompts to download (default 500)"
+      },
+      {
+        "name": "offset",
+        "type": "int",
+        "default": 0,
+        "required": false,
+        "help": "Skip first N prompts (default 0)"
+      },
+      {
+        "name": "sort",
+        "type": "str",
+        "default": "likes",
+        "required": false,
+        "help": "Sort field: likes, views, created_at"
+      },
+      {
+        "name": "concurrency",
+        "type": "int",
+        "default": 8,
+        "required": false,
+        "help": "Concurrent image downloads"
+      }
+    ],
+    "columns": [
+      "id",
+      "title",
+      "status",
+      "imagePath"
+    ],
+    "type": "js",
+    "modulePath": "meigen/download.js",
+    "sourceFile": "meigen/download.js"
+  },
+  {
+    "site": "meigen",
+    "name": "fetch",
+    "description": "Fetch full prompt details by tweet ID via Supabase API",
+    "access": "read",
+    "strategy": "public",
+    "browser": false,
+    "args": [
+      {
+        "name": "id",
+        "type": "str",
+        "required": true,
+        "positional": true,
+        "help": "Prompt tweet ID (e.g. 2056741284023599471)"
+      }
+    ],
+    "columns": [
+      "id",
+      "title",
+      "author",
+      "handle",
+      "model",
+      "likes",
+      "views",
+      "datePublished",
+      "prompt",
+      "negativePrompt",
+      "imageUrl",
+      "url"
+    ],
+    "type": "js",
+    "modulePath": "meigen/fetch.js",
+    "sourceFile": "meigen/fetch.js"
+  },
+  {
+    "site": "meigen",
+    "name": "list",
+    "description": "List prompts from meigen.ai via Supabase API",
+    "access": "read",
+    "strategy": "public",
+    "browser": false,
+    "args": [
+      {
+        "name": "limit",
+        "type": "int",
+        "default": 20,
+        "required": false,
+        "help": "Max results (default 20)"
+      },
+      {
+        "name": "sort",
+        "type": "str",
+        "default": "likes",
+        "required": false,
+        "help": "Sort field: likes, views, created_at"
+      }
+    ],
+    "columns": [
+      "id",
+      "title",
+      "author",
+      "handle",
+      "model",
+      "likes",
+      "views"
+    ],
+    "type": "js",
+    "modulePath": "meigen/list.js",
+    "sourceFile": "meigen/list.js"
+  },
+  {
     "site": "mercury",
     "name": "check-login",
     "description": "Open Mercury reimbursements and report whether the active browser profile is logged in",
@@ -30122,6 +30373,49 @@
     "modulePath": "pinterest/user-pins.js",
     "sourceFile": "pinterest/user-pins.js",
     "navigateBefore": "https://www.pinterest.com"
+  },
+  {
+    "site": "pippit",
+    "name": "avatars",
+    "description": "Download ALL Pippit.ai digital human avatar covers and preview videos",
+    "access": "read",
+    "domain": "www.pippit.ai",
+    "strategy": "cookie",
+    "browser": true,
+    "args": [
+      {
+        "name": "output",
+        "type": "str",
+        "default": "./pippit-avatars",
+        "required": false,
+        "help": "Output directory"
+      },
+      {
+        "name": "resolution",
+        "type": "str",
+        "default": "origin",
+        "required": false,
+        "help": "Video resolution: origin, 720p, 540p, 480p, 360p"
+      },
+      {
+        "name": "covers-only",
+        "type": "boolean",
+        "default": false,
+        "required": false,
+        "help": "Download only covers, skip videos"
+      }
+    ],
+    "columns": [
+      "index",
+      "name",
+      "type",
+      "status",
+      "size"
+    ],
+    "type": "js",
+    "modulePath": "pippit/avatars.js",
+    "sourceFile": "pippit/avatars.js",
+    "navigateBefore": "https://www.pippit.ai"
   },
   {
     "site": "pixiv",
@@ -42562,6 +42856,25 @@
     "type": "js",
     "modulePath": "upwork/auth.js",
     "sourceFile": "upwork/auth.js",
+    "navigateBefore": false,
+    "siteSession": "persistent"
+  },
+  {
+    "site": "usefastlane",
+    "name": "blitz",
+    "description": "Collect audio names and durations from the Fastlane Blitz Select Audio dialog",
+    "access": "read",
+    "domain": "app.usefastlane.ai",
+    "strategy": "cookie",
+    "browser": true,
+    "args": [],
+    "columns": [
+      "name",
+      "duration"
+    ],
+    "type": "js",
+    "modulePath": "usefastlane/blitz.js",
+    "sourceFile": "usefastlane/blitz.js",
     "navigateBefore": false,
     "siteSession": "persistent"
   },
