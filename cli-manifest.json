@@ -14677,6 +14677,36 @@
   },
   {
     "site": "flow",
+    "name": "login",
+    "description": "Open flow login and wait until the browser session is authenticated",
+    "access": "write",
+    "domain": "flow.google.com",
+    "strategy": "cookie",
+    "browser": true,
+    "args": [
+      {
+        "name": "timeout",
+        "type": "int",
+        "default": 300,
+        "required": false,
+        "help": "Maximum seconds to wait for the user to finish login"
+      }
+    ],
+    "columns": [
+      "status",
+      "logged_in",
+      "site",
+      "name"
+    ],
+    "type": "js",
+    "modulePath": "flow/auth.js",
+    "sourceFile": "flow/auth.js",
+    "navigateBefore": false,
+    "siteSession": "persistent",
+    "defaultWindowMode": "foreground"
+  },
+  {
+    "site": "flow",
     "name": "video",
     "description": "Generate AI videos using Google Flow (https://flow.google.com)",
     "access": "write",
@@ -14737,6 +14767,26 @@
     "modulePath": "flow/video.js",
     "sourceFile": "flow/video.js",
     "navigateBefore": true
+  },
+  {
+    "site": "flow",
+    "name": "whoami",
+    "description": "Show the current logged-in flow account",
+    "access": "read",
+    "domain": "flow.google.com",
+    "strategy": "cookie",
+    "browser": true,
+    "args": [],
+    "columns": [
+      "logged_in",
+      "site",
+      "name"
+    ],
+    "type": "js",
+    "modulePath": "flow/auth.js",
+    "sourceFile": "flow/auth.js",
+    "navigateBefore": false,
+    "siteSession": "persistent"
   },
   {
     "site": "gemini",
@@ -25839,131 +25889,6 @@
     "navigateBefore": "https://medium.com"
   },
   {
-    "site": "meigen",
-    "name": "download",
-    "description": "Batch download prompts and images from meigen.ai via Supabase API",
-    "access": "read",
-    "strategy": "public",
-    "browser": false,
-    "args": [
-      {
-        "name": "output",
-        "type": "str",
-        "default": "./meigen-downloads",
-        "required": false,
-        "positional": true,
-        "help": "Output directory path"
-      },
-      {
-        "name": "limit",
-        "type": "int",
-        "default": 500,
-        "required": false,
-        "help": "Max prompts to download (default 500)"
-      },
-      {
-        "name": "offset",
-        "type": "int",
-        "default": 0,
-        "required": false,
-        "help": "Skip first N prompts (default 0)"
-      },
-      {
-        "name": "sort",
-        "type": "str",
-        "default": "likes",
-        "required": false,
-        "help": "Sort field: likes, views, created_at"
-      },
-      {
-        "name": "concurrency",
-        "type": "int",
-        "default": 8,
-        "required": false,
-        "help": "Concurrent image downloads"
-      }
-    ],
-    "columns": [
-      "id",
-      "title",
-      "status",
-      "imagePath"
-    ],
-    "type": "js",
-    "modulePath": "meigen/download.js",
-    "sourceFile": "meigen/download.js"
-  },
-  {
-    "site": "meigen",
-    "name": "fetch",
-    "description": "Fetch full prompt details by tweet ID via Supabase API",
-    "access": "read",
-    "strategy": "public",
-    "browser": false,
-    "args": [
-      {
-        "name": "id",
-        "type": "str",
-        "required": true,
-        "positional": true,
-        "help": "Prompt tweet ID (e.g. 2056741284023599471)"
-      }
-    ],
-    "columns": [
-      "id",
-      "title",
-      "author",
-      "handle",
-      "model",
-      "likes",
-      "views",
-      "datePublished",
-      "prompt",
-      "negativePrompt",
-      "imageUrl",
-      "url"
-    ],
-    "type": "js",
-    "modulePath": "meigen/fetch.js",
-    "sourceFile": "meigen/fetch.js"
-  },
-  {
-    "site": "meigen",
-    "name": "list",
-    "description": "List prompts from meigen.ai via Supabase API",
-    "access": "read",
-    "strategy": "public",
-    "browser": false,
-    "args": [
-      {
-        "name": "limit",
-        "type": "int",
-        "default": 20,
-        "required": false,
-        "help": "Max results (default 20)"
-      },
-      {
-        "name": "sort",
-        "type": "str",
-        "default": "likes",
-        "required": false,
-        "help": "Sort field: likes, views, created_at"
-      }
-    ],
-    "columns": [
-      "id",
-      "title",
-      "author",
-      "handle",
-      "model",
-      "likes",
-      "views"
-    ],
-    "type": "js",
-    "modulePath": "meigen/list.js",
-    "sourceFile": "meigen/list.js"
-  },
-  {
     "site": "mercury",
     "name": "check-login",
     "description": "Open Mercury reimbursements and report whether the active browser profile is logged in",
@@ -30373,49 +30298,6 @@
     "modulePath": "pinterest/user-pins.js",
     "sourceFile": "pinterest/user-pins.js",
     "navigateBefore": "https://www.pinterest.com"
-  },
-  {
-    "site": "pippit",
-    "name": "avatars",
-    "description": "Download ALL Pippit.ai digital human avatar covers and preview videos",
-    "access": "read",
-    "domain": "www.pippit.ai",
-    "strategy": "cookie",
-    "browser": true,
-    "args": [
-      {
-        "name": "output",
-        "type": "str",
-        "default": "./pippit-avatars",
-        "required": false,
-        "help": "Output directory"
-      },
-      {
-        "name": "resolution",
-        "type": "str",
-        "default": "origin",
-        "required": false,
-        "help": "Video resolution: origin, 720p, 540p, 480p, 360p"
-      },
-      {
-        "name": "covers-only",
-        "type": "boolean",
-        "default": false,
-        "required": false,
-        "help": "Download only covers, skip videos"
-      }
-    ],
-    "columns": [
-      "index",
-      "name",
-      "type",
-      "status",
-      "size"
-    ],
-    "type": "js",
-    "modulePath": "pippit/avatars.js",
-    "sourceFile": "pippit/avatars.js",
-    "navigateBefore": "https://www.pippit.ai"
   },
   {
     "site": "pixiv",
@@ -42856,25 +42738,6 @@
     "type": "js",
     "modulePath": "upwork/auth.js",
     "sourceFile": "upwork/auth.js",
-    "navigateBefore": false,
-    "siteSession": "persistent"
-  },
-  {
-    "site": "usefastlane",
-    "name": "blitz",
-    "description": "Collect audio names and durations from the Fastlane Blitz Select Audio dialog",
-    "access": "read",
-    "domain": "app.usefastlane.ai",
-    "strategy": "cookie",
-    "browser": true,
-    "args": [],
-    "columns": [
-      "name",
-      "duration"
-    ],
-    "type": "js",
-    "modulePath": "usefastlane/blitz.js",
-    "sourceFile": "usefastlane/blitz.js",
     "navigateBefore": false,
     "siteSession": "persistent"
   },

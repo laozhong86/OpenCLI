@@ -168,11 +168,15 @@ cli({
         const known = new Set(knownLabels);
         const tiles = Array.from(document.querySelectorAll('flow-grid-tile-container'));
 
-        // 找最新的视频 Tile
+        // 找最新的视频 Tile（跳过提交前已存在的历史视频）
         for (const tile of tiles) {
           const videoTile = tile.querySelector('flow-video-tile');
           if (videoTile) {
             const label = tile.getAttribute('aria-label') || '';
+            if (label && known.has(label)) {
+              continue;
+            }
+
             const pending = videoTile.querySelector('flow-pending-tile');
             const img = videoTile.querySelector('img.thumbnail, img');
 
@@ -220,8 +224,17 @@ cli({
     const downloadStartTime = Date.now() - 2000;
     let finalSavedPath = '-';
 
-    // 点击视频 Tile 打开编辑详情页
-    await page.evaluate(() => {
+    // 点击视频 Tile 打开编辑详情页（优先点击新匹配的 targetLabel）
+    await page.evaluate((targetLabel) => {
+      if (targetLabel && targetLabel !== 'Google Flow Video') {
+        const tiles = Array.from(document.querySelectorAll('flow-grid-tile-container'));
+        const matched = tiles.find((t) => (t.getAttribute('aria-label') || '').includes(targetLabel));
+        const matchedTile = matched?.querySelector('flow-video-tile');
+        if (matchedTile) {
+          matchedTile.click();
+          return true;
+        }
+      }
       const tile = document.querySelector('flow-grid-tile-container flow-video-tile');
       if (tile) {
         tile.click();
@@ -233,7 +246,7 @@ cli({
         return true;
       }
       return false;
-    });
+    }, videoTitle);
 
     // 等待进入 /edit/<sceneId>
     await sleep(2500);
@@ -282,6 +295,10 @@ cli({
           finalSavedPath = downloadedFile.fullPath;
         }
       }
+    }
+
+    if (outputPath && finalSavedPath === '-') {
+      throw new CommandExecutionError('flow video', `Video generation completed on Flow, but downloading the file to "${outputPath}" failed or timed out.`);
     }
 
     return [
