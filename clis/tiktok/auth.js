@@ -20,6 +20,17 @@ async function verifyTiktokIdentity(page) {
       let data;
       try { data = JSON.parse(raw); } catch { return null; }
       const scope = data?.['__DEFAULT_SCOPE__'] || {};
+
+      // 1. 优先提取当前登录用户信息 (webapp.app-context.user)
+      const appUser = scope?.['webapp.app-context']?.user;
+      if (appUser && (appUser.secUid || appUser.sec_uid || appUser.uid)) {
+        return {
+          sec_uid: String(appUser.secUid || appUser.sec_uid || appUser.uid || ''),
+          username: String(appUser.uniqueId || appUser.unique_id || appUser.username || ''),
+          nickname: String(appUser.nickname || appUser.nickName || ''),
+        };
+      }
+
       const seen = new Set();
       const stack = [scope];
       while (stack.length) {

@@ -125,6 +125,12 @@ export async function ensureBrowserBridgeReady(
     }
 
     if (!portReleased) {
+      if (health.state === 'ready') {
+        if (verbose && (process.env.OPENCLI_VERBOSE || process.stderr.isTTY)) {
+          process.stderr.write(`⚠️  Using existing daemon (${reason}) because replacement was refused and bridge is ready.\n`);
+        }
+        return health;
+      }
       throw new BrowserConnectError(
         'Stale daemon could not be replaced',
         `A stale daemon (${reason}) is running but did not shut down (graceful + SIGKILL both failed).\n` +
